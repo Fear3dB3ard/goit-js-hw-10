@@ -7,8 +7,10 @@ document.addEventListener('DOMContentLoaded', async () => {
   const catInfo = document.querySelector('.cat-info');
 
   loader.style.display = 'none';
+  error.style.display = 'none';
 
   try {
+    // Fetch breeds
     const breeds = await fetchBreeds();
     breeds.forEach(breed => {
       const option = document.createElement('option');
@@ -16,6 +18,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       option.textContent = breed.name;
       breedSelect.appendChild(option);
     });
+
     breedSelect.addEventListener('change', async event => {
       const selectedBreedId = event.target.value;
       loader.style.display = 'block';
@@ -23,6 +26,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       catInfo.style.display = 'none';
 
       try {
+        // Fetch cat by breed
         const catData = await fetchCatByBreed(selectedBreedId);
         const cat = catData[0];
         catInfo.innerHTML = `
@@ -35,12 +39,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         loader.style.display = 'none';
         catInfo.style.display = 'block';
       } catch (err) {
+        // Handle error
         error.style.display = 'block';
         loader.style.display = 'none';
         console.error(err);
       }
     });
   } catch (err) {
+    // Handle error
     error.style.display = 'block';
     console.error(err);
   }
